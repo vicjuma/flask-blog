@@ -78,18 +78,18 @@
     </div>
     <div class="container">
         <div class="row">
-            <div class="col-lg-3">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                 <h4 class="text text-uppercase font-weight-bold">your profile</h4>
                 <img src="https://gravatar.com/avatar/{{member.url}}?s=120&d=monsterid" alt="profile" class="rounded-circle" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?">
             </div>
-            <div class="col-lg-6 mt-2">
+            <div class="col-lg-4 mt-2 col-md-4 col-xs-4 col-sm-4">
                 <h6 class="text text-uppercase">location : <small>{{member.location}}</small></h6>
                 <h6 class="text text-uppercase">occupation : <small>{{member.occupation}}</small></h6>
                 <h6 class="text text-uppercase">username : <small>{{member.name}}</small></h6>
                 <h6>About</h6>
                 <p>{{member.hobby}}</p>
             </div>
-            <div class="col-lg-3">
+            <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
                 <small><a style="cursor: pointer;" data-toggle="modal" data-target="#updateModal"><span class="fa fa-pencil"></span> update your profile</a></small>
             </div>
         </div>
@@ -101,11 +101,11 @@
         <form method="post">
             <div class="form-group">
                 <label for="title">Enter your title</label>
-                <textarea name="title" id="editor1" class="form-control form-control-lg"></textarea>
+                <textarea name="title" id="editor1" class="form-control form-control-sm" cols="30" rows="10"></textarea>
             </div>
             <div class="form-group">
                 <label for="blog">Enter your blog</label>
-                <textarea name="post" id="editor2" class="form-control form-control-lg"></textarea>
+                <textarea name="post" id="editor2" class="form-control form-control-sm" cols="30" rows="10"></textarea>
             </div>
             <div class="form-group">
                 <label for="category">select the category of your post</label>

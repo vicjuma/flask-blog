@@ -329,15 +329,14 @@ def invite():
         return redirect(url_for('home'))
 
 
-@app.route('/complaint', methods=['POST', 'GET'])
+@app.route('/complaint', methods=['POST'])
 def complaint():
     if not 'username' in session:
         return redirect(url_for('login'))
-    data = requet.get_json()
-    print(data)
-    return jsonify({
-        'details' : 'submitted'
-    })
+    name = request.form.get('name')
+    complaint = request.form.get('complaint')
+    return redirect(url_for('home'))
+
 
 @app.route('/all_post', methods=['GET', 'POST'])
 def all_posts():
@@ -358,7 +357,7 @@ def delete(id):
         return """<center>
         <h1>404 ERROR</h1>
         <br/>
-        <h2 class="display-4">you cannot edit this post
+        <h2 class="display-4">you cannot delete this post
          which does not belong to you </h2></center>""", 404
     db.session.delete(post)
     db.session.commit()

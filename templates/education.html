@@ -87,12 +87,12 @@
         <div class="collapse" id="navbarToggleExternalContent">
             <div class="bg-dark p-4">
                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                    <a class="nav-link active" id="v-pills-technology-tab" data-toggle="pill" href="#" role="tab" aria-controls="v-pills-technology" aria-selected="true">Technology</a>
+                    <a class="nav-link" id="v-pills-technology-tab" href="{{url_for('technology')}}">Technology</a>
                     <a class="nav-link" id="v-pills-sports-tab" href="{{url_for('sports')}}">Sports</a>
-                    <a class="nav-link" id="v-pills-education-tab" href="{{url_for('education')}}">Education</a>
+                    <a class="nav-link active" id="v-pills-education-tab" href="{{url_for('education')}}">Education</a>
                     <a class="nav-link" id="v-pills-programming-tab" href="{{url_for('programming')}}">Programming</a>
                     <a class="nav-link" id="v-pills-mathematics-tab" href="{{url_for('mathematics')}}">mathematics</a>
-                    <a class="nav-link" id="v-pills-politics-tab" role="{{url_for('politics')}}">politics</a>
+                    <a class="nav-link" id="v-pills-politics-tab" href="{{url_for('politics')}}">politics</a>
                     <a class="nav-link" id="v-pills-entertainment-tab" href="{{url_for('entertainment')}}">Entertainment</a>
                     <a href="{{url_for('question')}}" class="fa fa-question w-75 text-decoration-none"> respond to questions</a>
                 </div>
