@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="eng">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+    <script src="https://cdn.ckeditor.com/4.14.0/full-all/ckeditor.js"></script>
+    <title>admin dashboard</title>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+        <a href="#" class="text text-black-50 font-weight-bold text-decoration-none" style="font-family: monospace; font-size: 2em;">sharpMindBlog</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{url_for('admin.dashboard')}}"><span class="fa fa-cogs"></span> dashboard</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{url_for('admin.logout_admin')}}"><span class="fa sign-out"></span> logout</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{url_for('admin.admin_posts')}}"><span class="fa pencil"></span> posts</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{url_for('admin.admin_questions')}}"><span class="fa pencil"></span> questions</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{url_for('admin.inform')}}"><span class="fa fa-paper-plane"></span> email</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        {% with messages=get_flashed_messages(with_categories=true)%} {% if messages %} {%for category, message in messages%} {% if category %}
+        <div class="alert alert-{{category}} alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert">&times;</button> {{ message }}
+        </div>{%endif%} {%endfor%} {%endif%} {%endwith%}
+        <h1 class="text display-4">welcome admin</h1>
+        <table class="table table-hover table-dark table-borderless table-striped table-responsive-lg">
+            <tr>
+                <th>question</th>
+                <th>category</th>
+                <th>author</th>
+                <th>answered</th>
+                <th>answer</th>
+            </tr>
+            {%for question in question%}
+            <tr>
+                <td>{{question.question}}</td>
+                <td>{{question.category}}</td>
+                <td>{{question.author}}</td>
+                <td>{{question.is_answered}}</td>
+                <td>{{question.answer}}</td>
+            </tr>
+            {%endfor%}
+        </table>
+    </div>
+</body>
+
+<script src="{{url_for('static', filename='js/jquery-3.4.1.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
+
+</html>

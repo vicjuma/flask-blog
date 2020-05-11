@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="eng">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.ckeditor.com/4.14.0/full-all/ckeditor.js"></script>
+    <title>Home</title>
+
+</head>
+<script>
+    function error() {
+        var name = document.querySelector('#search').value;
+        if (name == '') {
+            document.querySelector('#search').style.border = '2px solid red';
+        }
+    };
+</script>
+<style>
+    *{
+    font-family: san-seriff;
+    font-size: 19px;
+    }
+</style>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+        <a href="#" class="text text-black-50 font-weight-bold text-decoration-none" style="font-family: monospace; font-size: 2em;">sharpMindBlog</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{url_for('users.home')}}"><span class="fa fa-home"></span> Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('users.logout')}}"><span class="fa fa-sign-out"></span> sign out</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('users.account')}}">account</a>
+                </li>
+                <li class="nav-item "><a style="cursor: pointer;" data-toggle="modal" data-target='#invite' class="nav-link">invite</a></li>
+                <li class="nav-item"><a style="cursor: pointer;" class="btn btn-outline-secondary nav-link" data-toggle="modal" data-target='#question'>ask question</a></li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0" method="POST" action="{{url_for('users.search')}}">
+                <input class="form-control mr-sm-2" type="search" required placeholder="Search" aria-label="Search" name="name" autocomplete="off">
+                <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search posts</button>
+            </form>
+        </div>
+    </nav>
+    <div class="pos-f-t">
+        <div class="collapse" id="navbarToggleExternalContent">
+            <div class="bg-dark p-4">
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <a class="nav-link active" id="v-pills-technology-tab" href="{{url_for('users.technology')}}">Technology</a>
+                    <a class="nav-link" id="v-pills-sports-tab" href="{{url_for('users.sports')}}">Sports</a>
+                    <a class="nav-link" id="v-pills-education-tab" href="{{url_for('users.education')}}">Education</a>
+                    <a class="nav-link" id="v-pills-programming-tab" href="{{url_for('users.programming')}}">Programming</a>
+                    <a class="nav-link" id="v-pills-mathematics-tab" href="{{url_for('users.mathematics')}}">mathematics</a>
+                    <a class="nav-link" id="v-pills-politics-tab" href="{{url_for('users.politics')}}">politics</a>
+                    <a class="nav-link" id="v-pills-entertainment-tab" href="{{url_for('users.entertainment')}}">Entertainment</a>
+                    <a class="nav-link" id="v-pills-question-tab" href="{{url_for('users.question')}}"> respond to questions</a>
+                </div>
+            </div>
+        </div>
+        <nav class="navbar navbar-dark bg-dark">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </nav>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-3">
+                </div>
+                <div class="col-lg-9 col-md-12 col-sm-12">
+                    <form method="post">
+                        <div class="form-group">
+                            <label for="question">{{question.question}}</label>
+                            <textarea class="form-control form-control-sm" id="editor2" name="answer"></textarea>
+                        </div>
+                        <input type="submit" value="submit answer" class="btn btn-outline-primary">
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- modal for asking questions -->
+        <div class="modal fade" id="question" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">prompt others to answer your question</h4>
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="jumbotron">
+                            <ul>
+                                <li style="list-style: circle;">
+                                    <h6 class="text text-danger">ensure that the correct syntax is used to ensure proper understanding of the person answering the question</h6>
+                                </li>
+                                <li style="list-style: circle;">
+                                    <h6 class=" text text-danger ">begin your question with how when why where which explain clauses when asking your questions</h6>
+                                </li>
+                                <li style="list-style: circle;">
+                                    <h6 class="text text-danger">ensure that your question ends with a question mark e.g How do you ask question in smartmindblog?</h6>
+                                </li>
+                            </ul>
+                        </div>
+                        <form action="{{url_for('users.ask')}}" method="post">
+                            <div class="form-group">
+                                <label for="question">enter your question</label>
+                                <textarea name="question" class="form-control form-control-sm" id="editor"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="category">select the category of your post</label>
+                                <select name="category" id="category" class="custom-select custom-select-sm" required>
+                                <option value="technology">technology</option>
+                                <option value="programming">programming</option>
+                                <option value="mathematics">mathematics</option>
+                                <option value="sports">sports</option>
+                                <option value="education">education</option>
+                                <option value="entertainment">entertainment</option>
+                                <option value="politics">politics</option>
+                            </select>
+                            </div>
+                            <input type="submit" value="ask question" class="btn btn-success">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- invite modal -->
+        <div class="modal fade" id="invite" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="title">invite others to join the chat</h4>
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{url_for('users.invite')}}" method="post">
+                            <div class="form-group">
+                                <label for="question">enter your friends email</label>
+                                <input name="email" id="email" class="form-control form-control-sm" type="email" autocomplete="off">
+                            </div>
+                            <input type="submit" value="send invitation link" class="btn btn-danger">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    CKEDITOR.replace('editor');
+</script>
+<script>
+    CKEDITOR.replace('editor2');
+</script>
+<script src="{{url_for('static', filename='js/jquery-3.4.1.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
+
+</html>

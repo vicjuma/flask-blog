@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="eng">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+    <script src="https://cdn.ckeditor.com/4.14.0/full-all/ckeditor.js"></script>
+    <title>admin authentication</title>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+        <a href="#" class="text text-black-50 font-weight-bold text-decoration-none" style="font-family: monospace; font-size: 2em;">sharpMindBlog</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{url_for('admin.dashboard')}}"><span class="fa fa-home"></span> dashboard</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        {% with messages=get_flashed_messages(with_categories=true)%} {% if messages %} {%for category, message in messages%} {% if category %}
+        <div class="alert alert-{{category}} alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert">&times;</button> {{ message }}
+        </div>{%endif%} {%endfor%} {%endif%} {%endwith%}
+        <div class="row">
+            <div class="col-lg-6">
+                <h6 class="text text text-capitalize font-weight-bolder">admin authentication</h6>
+                <form method="post">
+                    <div class="form-group">
+                        <label for="email">enter your email</label>
+                        <input type="email" class="form-control form-control-sm" name='email' required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">enter your password</label>
+                        <input type="password" name="password" id="password" class="form-control form-control-sm" required>
+                    </div>
+                    <input type="submit" value="login" class="btn btn-warning">
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="{{url_for('static', filename='js/jquery-3.4.1.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
+
+</html>
