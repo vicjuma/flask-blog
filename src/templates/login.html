@@ -6,20 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+    <link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}">
     <title>login</title>
 
 </head>
 <style>
-    *{
-    font-family: san-seriff;
-    font-size: 14px;
+    * {
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-size: 16px;
     }
 </style>
+
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
         <a href="#" class="text text-black-50 font-weight-bold text-decoration-none" style="font-family: monospace; font-size: 2em;">sharpMindBlog</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" style="cursor:grab; border-style: none; outline:none;" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+            id="button-nav">
           <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -40,16 +43,20 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{url_for('users.account')}}">account</a>
                 </li>
+            </ul>
         </div>
     </nav>
     <!-- the login form -->
     <div class="container">
-        {%with messages=get_flashed_messages(with_categories=true)%} {% if messages %} {%for category, message in messages%} {% if category %}
-        <div class="alert alert-{{category}} alert-dismissable mt-3">
-            <button type="button" class="close" data-dismiss="alert">&times;</button> {{ message }}
-        </div>{%endif%} {%endfor%} {%endif%} {%endwith%}
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-3 col-md-2 col-sm-1">
+
+            </div>
+            <div class="col-lg-6 col-md-8 col-sm-10">
+                {%with messages=get_flashed_messages(with_categories=true)%} {% if messages %} {%for category, message in messages%} {% if category %}
+                <div class="alert alert-{{category}} alert-dismissable mt-3">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button> {{ message }}
+                </div>{%endif%} {%endfor%} {%endif%} {%endwith%}
                 <form method="post">
                     <div class="form-group">
                         <label for="email">Enter your email</label>
@@ -59,27 +66,15 @@
                         <label for="password">Enter your password</label>
                         <input type="password" name="password" id="password" class="form-control form-control-sm" autocomplete="off" required>
                     </div>
-                    <input type="submit" value="login" class="btn btn-outline-primary" id="submit">
+                    <button type="submit" class="btn btn-outline-primary" id="submit">login</button>
                 </form>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-3 col-md-2 col-sm-1">
 
             </div>
         </div>
     </div>
 
-    <!-- the registration modal -->
-    <div class="modal fade" id='modal'>
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="modal-header">
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </body>
 <script src="{{url_for('static', filename='js/jquery-3.4.1.min.js')}}"></script>
 <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>

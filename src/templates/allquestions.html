@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
     <script src="https://cdn.ckeditor.com/4.14.0/full-all/ckeditor.js"></script>
-    <title>my posts</title>
+    <title>my questions</title>
 
 </head>
 <style>
@@ -47,11 +47,6 @@
                             <a class="dropdown-item" href="{{url_for('users.all_posts')}}">delete posts</a>
                         </div>
                     </li>
-                    {%if user.Admin == True%}
-                    <li>
-                        <a href="{{url_for('admin.dashboard')}}" class="nav-link"><span class="fa fa-cog"></span> dashboard</a>
-                    </li>
-                    {%endif%}
                     <li class="nav-item">
                         <a class="nav-link" href="{{url_for('users.account')}}">account</a>
                     </li>
@@ -83,17 +78,12 @@
                 {% with messages=get_flashed_messages(with_categories=true)%} {% if messages %} {%for category, message in messages%} {% if category %}
                 <div class="alert alert-{{category}} alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert">&times;</button> {{ message }}
-                </div>{%endif%} {%endfor%} {%endif%} {%endwith%} {%for posts in post.items%}
-                <h4 class="text text-capitalize font-weight-bolder">{{posts.title}}</h4>
-                <p>{{posts.post}}</p>
-                <a href="{{url_for('users.edit', id=posts.id)}}" class="btn btn-primary"><span class="fa fa-pencil"></span> edit your post</a>
-                <span><a href="{{url_for('users.delete', id=posts.id)}}" class="btn btn-danger"><span class="fa fa-trash"></span> delete your post</a>
+                </div>{%endif%} {%endfor%} {%endif%} {%endwith%} {%for question in quiz%}
+                <p>{{question.question}}</p>
+                <a href="{{url_for('users.editqn', id=question.id)}}" class="btn btn-primary"><span class="fa fa-pencil"></span> edit your post</a>
+                <span><a href="{{url_for('users.deletequestion', id=question.id)}}" class="btn btn-danger"><span class="fa fa-trash"></span> delete your post</a>
                 </span>
-                <hr> {%endfor%} {%if post.has_prev%}
-                <a href="{{url_for( 'users.all_posts', page=post.prev_num)}} " class="btn btn-outline-secondary btn-sm" style="border-radius: 50px; position: absolute; left: 0%;">&lt;&lt;</a> {%else%}
-                <a href="{{url_for( 'users.all_posts', page=post.prev_num)}} " class="btn btn-outline-secondary btn-sm disabled" style="border-radius: 50px; position: absolute; left: 0%;">&lt;&lt;</a> {%endif%} {%if post.has_next%}
-                <a href="{{url_for( 'users.all_posts', page=post.next_num)}} " class="btn btn-outline-secondary btn-sm " style="border-radius: 50px; position: absolute; left: 90%;">&gt;&gt;</a> {%else%}
-                <a href="{{url_for( 'users.all_posts', page=post.next_num)}} " class="btn btn-outline-secondary btn-sm disabled " style="border-radius: 50px; position: absolute; left: 90%;">&gt;&gt;</a> {%endif%}
+                <hr> {%endfor%}
             </div>
         </div>
     </div>

@@ -4644,7 +4644,8 @@ input[type=submit].btn-block {
     vertical-align: middle;
     content: "";
     background: no-repeat center center;
-    background-size: 100% 100%
+    background-size: 100% 100%;
+    outline: none;
 }
 
 @media (max-width:575.98px) {

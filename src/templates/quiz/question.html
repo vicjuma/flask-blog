@@ -1,0 +1,59 @@
+{% extends 'public/main.html' %} {% block body %}
+
+<div class="container-fluid position-absolute" style="top: 8em">
+    <div class="row">
+        <div class="col-lg-2">
+
+        </div>
+        <div class="col-lg-8">
+            {% with messages=get_flashed_messages(with_categories=true)%} {% if messages %} {%for category, message in messages%} {% if category %}
+            <div class="alert alert-{{category}} alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert">&times;</button> {{ message }}
+            </div>
+            {%endif%} {%endfor%} {%endif%} {%endwith%}
+            <div class="container one">
+                <div class="header">
+                    <h4 class="text text-capitalize">participate in answering questions to help others out !!!</h4>
+                </div>
+
+                <div class="one-body">
+                    {%for qn in qn.items%}
+                    <div class="d-flex">
+                        <p class="text text-dark mr-2 text-break">{{qn.question}}</p>
+                    </div>
+                    |<a href="{{url_for('users.answ', id=qn.id)}}" class="text-decoration-none text-capitalize">answer question</a> |<a href="#" class="text-decoration-none text-capitalize" id="upvoteanswer"> upvote</a> | <a href="" class="text-decoration-none text-capitalize">turn down </a>|
+                    <hr> {%for answer in qn.answer%}
+                    <div class="col-lg-10">
+                        <ul class="list-unstyled mt-3">
+                            <li class="media">
+                                <div class="media-body">
+                                    <p class="mt-0 mb-1 font-weight-bold">@{{answer.author}}</p>
+                                    <p class="text mr-2">{{answer.answer}}</p>
+                                    |<a href="#" class="text-decoration-none text-capitalize"> upvote answer</a> | <a href="" class="text-decoration-none text-capitalize">turn down </a>|
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    {%endfor%}
+                    <hr>{%endfor%}
+                    <div class="paginate">
+                        <div class="right mr-auto">
+                            {% if qn.has_prev%}
+                            <a href="{{url_for( 'users.question', page=qn.prev_num)}} " class="btn btn-outline-secondary btn-sm">&lt;&lt;</a> {%else%}
+                            <a href="{{url_for( 'users.question', page=qn.prev_num)}} " class="btn btn-outline-secondary btn-sm disabled">&lt;&lt;</a> {%endif%}
+                        </div>
+                        <div class="left ml-auto">
+                            {%if qn.has_next%}
+                            <a href="{{url_for( 'users.question', page=qn.next_num)}} " class="btn btn-outline-secondary btn-sm">&gt;&gt;</a> {%else%}
+                            <a href="{{url_for( 'users.question', page=qn.next_num)}} " class="btn btn-outline-secondary btn-sm disabled">&gt;&gt;</a> {%endif%}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-2">
+
+</div>
+{% endblock body %}

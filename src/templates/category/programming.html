@@ -1,0 +1,34 @@
+{% extends "public/main.html"%} {% block body %}
+
+<div class="container-fluid mb-5 position-absolute" style="top: 8em">
+    <div class="row">
+        <div class="col-lg-2">
+        </div>
+        <div class="col-lg-8 col-md-12">
+            {% with messages=get_flashed_messages(with_categories=true)%} {% if messages %} {%for category, message in messages%} {% if category %}
+            <div class="alert alert-{{category}} alert-dismissable">
+                <button type="button " class="close " data-dismiss="alert">&times;</button> {{ message }}
+            </div>{%endif%} {%endfor%} {%endif%} {%endwith%} {%for post in post.items%}
+            <ul class="list-unstyled mt-3" style="background-color: white;">
+                <li class="media ">
+                    <img src="https://gravatar.com/avatar/{{post.author.url}}?s=80&d=monsterid" class="mr-3 rounded-circle " alt="... ">
+                    <div class="media-body">
+                        <h4 class="mt-0 mb-1 text-capitalize font-weight-bold ">{{post.title}}</h4>
+                        <small class="text text-muted">{{post.author.name}} on {{post.date}}</small>
+                        <hr>
+                        <p class="text text-dark mr-2 text-break ">{{post.post}}</p>
+                    </div>
+
+                </li>
+            </ul>
+            {%endfor%} {% if post.has_prev%}
+            <a href="{{url_for( 'users.programming', page=post.prev_num)}} " class="btn btn-outline-secondary btn-sm" style="border-radius: 50px; position: relative; left: 0%;">&lt;&lt;</a> {%else%}
+            <a href="{{url_for( 'users.programming', page=post.prev_num)}} " class="btn btn-outline-secondary btn-sm disabled" style="border-radius: 50px; position: absolute; left: 0%;">&lt;&lt;</a> {%endif%} {%if post.has_next%}
+            <a href="{{url_for( 'users.programming', page=post.next_num)}} " class="btn btn-outline-secondary btn-sm " style="border-radius: 50px; position: absolute; left: 95%;">&gt;&gt;</a> {%else%}
+            <a href="{{url_for( 'users.programming', page=post.next_num)}} " class="btn btn-outline-secondary btn-sm disabled " style="border-radius: 50px; position: absolute; left: 95%;">&gt;&gt;</a> {%endif%}
+        </div>
+        <div class="col-lg-2 ">
+        </div>
+    </div>
+</div>
+{% endblock body %}

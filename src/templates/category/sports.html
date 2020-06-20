@@ -1,0 +1,44 @@
+{% extends 'public/main.html' %} {% block body %}
+
+<div class="container-fluid mb-5">
+    <div class="row">
+        <div class="col-lg-3 col-md-3">
+        </div>
+        <div class="col-lg-9 col-md-9 bg-light">
+            {% with messages=get_flashed_messages(with_categories=true)%} {% if messages %} {%for category, message in messages%} {% if category %}
+            <div class="alert alert-{{category}} alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert">&times;</button> {{ message }}
+            </div>{%endif%} {%endfor%} {%endif%} {%endwith%} {%for post in post.items%}
+            <ul class="list-unstyled mt-3" style="background-color: white;">
+                <li class="media">
+                    <img src="https://gravatar.com/avatar/{{post.author.url}}?s=80&d=monsterid" class="mr-3 rounded-circle" alt="...">
+                    <div class="media-body">
+                        <h4 class="mt-0 mb-1 text-capitalize  font-weight-bold">{{post.title}}</h4>
+                        <small>{{post.author.name}} on {{post.date}}</small>
+                        <hr>
+                        <p class="text text-dark mr-2 text-break">{{post.post}}</p>
+                    </div>
+
+                </li>
+            </ul>
+            {%endfor%}
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        {%if post.has_prev%}
+                        <a href="{{url_for('users.sports', page=post.prev_num)}}" class="btn btn-secondary btn-sm">&lt;&lt;</a> {%else%}
+                        <a href="{{url_for('users.sports', page=post.prev_num)}}" class="btn btn-secondary btn-sm disabled">&lt;&lt;</a> {%endif%}
+                    </div>
+                    <div class="col-lg-6 col-md-4 col-sm-0">
+
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        {%if post.has_next%}
+                        <a href="{{url_for('users.sports', page=post.next_num)}}" class="btn btn-secondary btn-sm">&gt;&gt;</a> {%else%}
+                        <a href="{{url_for('users.sports', page=post.next_num)}}" class="btn btn-secondary btn-sm disabled">&gt;&gt;</a> {%endif%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock body %}

@@ -21,7 +21,7 @@ def remove(html):
 def home():
     if 'username' in session:
         page = request.args.get('page', type=int)
-        post = Posts.query.order_by(Posts.date.asc()).paginate(page=page, per_page=6)
+        post = Posts.query.order_by(Posts.date.desc()).paginate(page=page, per_page=2)
         user = User.query.filter_by(name=session['username']).first()
         # checks for the first character in the email
         c = []
@@ -30,11 +30,24 @@ def home():
         d = c[0]
         # counts for the post of the specific user
         count = Posts.query.filter_by(user_id=user.id).count()
-        return render_template('home.html', post=post, user=user, count=count, d=d)
-
+        return render_template('posts/home.html', post=post, user=user, count=count, d=d, title='home')
     else:
         return redirect(url_for('users.login'))
 
+@views_blueprint.route('/home/post/<int:id>')
+def eachpost(id):
+    if 'username' in session:
+        post = Posts.query.get_or_404(id)
+        user = User.query.filter_by(name=session['username']).first()
+        # checks for the first character in the email
+        c = []
+        for letter in user.email:
+            c.append(letter)
+        d = c[0]
+        # counts for the post of the specific user
+        return render_template('posts/each.html', post=post, user=user, d=d)
+    else:
+        return redirect(url_for('users.login'))
 
 # this fuction gets called before any context
 @views_blueprint.before_request
@@ -49,7 +62,7 @@ def before_request():
 def register():
     if request.method == 'GET':
         session.pop('username', None)
-        return render_template('register.html')
+        return render_template('register.html', title="register")
     name = request.form.get('name')
     email = request.form.get('email')
     url = hashlib.md5(email.encode('utf-8')).hexdigest()
@@ -80,7 +93,7 @@ def login():
         # if there is a user in session he is automatically redirected back to the home route
     if request.method == 'GET':
         session.pop('username', None)
-        return render_template('login.html')
+        return render_template('login.html', title='login')
     else:
         email = request.form.get('email')
         password = request.form.get('password')
@@ -103,8 +116,10 @@ def account():
         member = User.query.filter_by(name=session['username']).first()
         count = Posts.query.filter_by(user_id=member.id).count()
         user = User.query.filter_by(name=session['username']).first()
+        quiz = Questions.query.filter_by(author=user.email).count()
+        answer = Answers.query.filter_by(author=user.email).count()
         if request.method == 'GET':
-            return render_template('account.html', member=member, user=user, count=count)
+            return render_template('account.html', title='account', member=member, user=user, count=count, quiz=quiz, answer=answer)
         else:
             title = request.form.get('title')
             post = request.form.get('post')
@@ -141,11 +156,13 @@ def search():
 
 @views_blueprint.route('/question', methods=['GET', 'POST'])
 def question():
+    if not 'username' in session:
+        return redirect(url_for('users.login'))
     page = request.args.get('page', type=int)
     user = User.query.filter_by(name=session['username']).first()
     count = Posts.query.filter_by(user_id=user.id).count()
-    qn = Questions.query.paginate(page=page, per_page=6)
-    return render_template('question.html', qn=qn, user=user, count=count)
+    qn = Questions.query.paginate(page=page, per_page=10)
+    return render_template('quiz/question.html', qn=qn, user=user, count=count)
 
 
 @views_blueprint.route('/ask', methods=['POST'])
@@ -178,6 +195,9 @@ def answ(id):
     ans = remove(request.form.get('answer'))
     user = User.query.filter_by(name=session['username']).first()
     author = user.email
+    if question.author == author:
+        flash('you cannot answer your own question', 'danger')
+        return redirect(url_for('users.question'))
     url = user.url
     item = Answers(answer=ans, question_id=question.id, author=author, url=url)
     db.session.add(item)
@@ -210,23 +230,15 @@ def invite():
         return redirect(url_for('users.home'))
 
 
-@views_blueprint.route('/complaint', methods=['POST'])
-def complaint():
-    if not 'username' in session:
-        return redirect(url_for('users.login'))
-    name = request.form.get('name')
-    complaint = request.form.get('complaint')
-    return redirect(url_for('users.home'))
-
-
 @views_blueprint.route('/all_post', methods=['GET', 'POST'])
 def all_posts():
     if not 'username' in session:
         return redirect(url_for('login'))
+    page = request.args.get('page', type=int)
     user = User.query.filter_by(name=session['username']).first()
-    post = Posts.query.filter_by(user_id=user.id).all()
+    post = Posts.query.filter_by(user_id=user.id).order_by(Posts.date.desc()).paginate(page=page, per_page=2)
     count = Posts.query.filter_by(user_id=user.id).count()
-    return render_template('edit.html', post=post, count=count, user=user)
+    return render_template('edit.html', post=post, count=count, user=user, page=page)
 
 
 @views_blueprint.route('/delete/post/<int:id>')
@@ -282,25 +294,11 @@ def update():
     return redirect(url_for('users.login'))
 
 
-@views_blueprint.route('/api')
-def rest():
-    users = User.query.filter_by().count()
-    posts = Posts.query.filter_by().count()
-    unanswered = Questions.query.group_by(Questions.is_answered == False).count()
-    answered = Questions.query.group_by(Questions.is_answered == True).count()
-    return jsonify({
-        'users': users,
-        'posts': posts,
-        'unanswered questions': unanswered,
-        'answered': answered
-    })
-
-
 @views_blueprint.route('/posts/programming')
 def programming():
     if 'username' in session:
         page = request.args.get('page', type=int)
-        post = Posts.query.filter_by(category='programming').order_by(Posts.date.asc()).paginate(page=page, per_page=5)
+        post = Posts.query.filter_by(category='programming').order_by(Posts.date.desc()).paginate(page=page, per_page=2)
         user = User.query.filter_by(name=session['username']).first()
         # checks for the first character in the email
         c = []
@@ -309,7 +307,7 @@ def programming():
         d = c[0]
         # counts for the post of the specific user
         count = Posts.query.filter_by(user_id=user.id).count()
-        return render_template('programming.html', post=post, user=user, count=count, d=d)
+        return render_template('category/programming.html', post=post, user=user, count=count, d=d, title='programming')
 
     else:
         return redirect(url_for('users.login'))
@@ -319,7 +317,7 @@ def programming():
 def sports():
     if 'username' in session:
         page = request.args.get('page', type=int)
-        post = Posts.query.filter_by(category='sports').order_by(Posts.date.asc()).paginate(page=page, per_page=5)
+        post = Posts.query.filter_by(category='sports').order_by(Posts.date.desc()).paginate(page=page, per_page=2)
         user = User.query.filter_by(name=session['username']).first()
         # checks for the first character in the email
         c = []
@@ -328,7 +326,7 @@ def sports():
         d = c[0]
         # counts for the post of the specific user
         count = Posts.query.filter_by(user_id=user.id).count()
-        return render_template('sports.html', post=post, user=user, count=count, d=d)
+        return render_template('category/sports.html', post=post, user=user, count=count, d=d, title='sports')
 
     else:
         return redirect(url_for('users.login'))
@@ -338,7 +336,7 @@ def sports():
 def education():
     if 'username' in session:
         page = request.args.get('page', type=int)
-        post = Posts.query.filter_by(category='education').order_by(Posts.date.asc()).paginate(page=page, per_page=5)
+        post = Posts.query.filter_by(category='education').order_by(Posts.date.desc()).paginate(page=page, per_page=2)
         user = User.query.filter_by(name=session['username']).first()
         # checks for the first character in the email
         c = []
@@ -347,7 +345,7 @@ def education():
         d = c[0]
         # counts for the post of the specific user
         count = Posts.query.filter_by(user_id=user.id).count()
-        return render_template('education.html', post=post, user=user, count=count, d=d)
+        return render_template('category/education.html', post=post, user=user, count=count, d=d, title='education')
 
     else:
         return redirect(url_for('users.login'))
@@ -357,7 +355,7 @@ def education():
 def mathematics():
     if 'username' in session:
         page = request.args.get('page', type=int)
-        post = Posts.query.filter_by(category='mathematics').order_by(Posts.date.asc()).paginate(page=page, per_page=5)
+        post = Posts.query.filter_by(category='mathematics').order_by(Posts.date.desc()).paginate(page=page, per_page=2)
         user = User.query.filter_by(name=session['username']).first()
         # checks for the first character in the email
         c = []
@@ -366,7 +364,7 @@ def mathematics():
         d = c[0]
         # counts for the post of the specific user
         count = Posts.query.filter_by(user_id=user.id).count()
-        return render_template('mathematics.html', post=post, user=user, count=count, d=d)
+        return render_template('category/mathematics.html', post=post, user=user, count=count, d=d, title='mathematics')
 
     else:
         return redirect(url_for('users.login'))
@@ -376,8 +374,8 @@ def mathematics():
 def entertainment():
     if 'username' in session:
         page = request.args.get('page', type=int)
-        post = Posts.query.filter_by(category='entertainment').order_by(Posts.date.asc()).paginate(page=page,
-                                                                                                   per_page=5)
+        post = Posts.query.filter_by(category='entertainment').order_by(Posts.date.desc()).paginate(page=page,
+                                                                                                   per_page=2)
         user = User.query.filter_by(name=session['username']).first()
         # checks for the first character in the email
         c = []
@@ -386,7 +384,7 @@ def entertainment():
         d = c[0]
         # counts for the post of the specific user
         count = Posts.query.filter_by(user_id=user.id).count()
-        return render_template('entertainment.html', post=post, user=user, count=count, d=d)
+        return render_template('category/entertainment.html', post=post, user=user, count=count, d=d, title='entertainment')
 
     else:
         return redirect(url_for('users.login'))
@@ -396,7 +394,7 @@ def entertainment():
 def politics():
     if 'username' in session:
         page = request.args.get('page', type=int)
-        post = Posts.query.filter_by(category='politics').order_by(Posts.date.asc()).paginate(page=page, per_page=5)
+        post = Posts.query.filter_by(category='politics').order_by(Posts.date.desc()).paginate(page=page, per_page=2)
         user = User.query.filter_by(name=session['username']).first()
         # checks for the first character in the email
         c = []
@@ -405,7 +403,7 @@ def politics():
         d = c[0]
         # counts for the post of the specific user
         count = Posts.query.filter_by(user_id=user.id).count()
-        return render_template('politics.html', post=post, user=user, count=count, d=d)
+        return render_template('category/politics.html', post=post, user=user, count=count, d=d, title='politics')
 
     else:
         return redirect(url_for('users.login'))
@@ -415,7 +413,7 @@ def politics():
 def technology():
     if 'username' in session:
         page = request.args.get('page', type=int)
-        post = Posts.query.filter_by(category='technology').order_by(Posts.date.asc()).paginate(page=page, per_page=5)
+        post = Posts.query.filter_by(category='technology').order_by(Posts.date.desc()).paginate(page=page, per_page=2)
         user = User.query.filter_by(name=session['username']).first()
         # checks for the first character in the email
         c = []
@@ -424,7 +422,7 @@ def technology():
         d = c[0]
         # counts for the post of the specific user
         count = Posts.query.filter_by(user_id=user.id).count()
-        return render_template('technology.html', post=post, user=user, count=count, d=d)
+        return render_template('category/technology.html', post=post, user=user, count=count, d=d, title='technology')
 
     else:
         return redirect(url_for('users.login'))
@@ -448,3 +446,76 @@ def editqn(id):
     db.session.commit()
     flash('your question has been successfully edited', 'success')
     return redirect(url_for('users.question'))
+
+@views_blueprint.route('/edit/answer/<int:id>', methods=['GET', 'POST'])
+def editanswer(id):
+    if not 'username' in session:
+        return redirect(url_for('login'))
+    user = User.query.filter_by(name=session['username']).first()
+    answer = Answers.query.get_or_404(id)
+    if request.method == 'GET':
+        return render_template('answeredit.html', answer=answer, user=user)
+    if answer.id != user.id:
+        return """<center>
+        <h1>404 ERROR</h1>
+        <br/>
+        <h2 class="display-4">you cannot edit this question
+         which does not belong to you click here to return home page <a href="{{url_for('home')}}">home</a></h4></center>""", 404
+    answer.question = request.form.get('edit')
+    db.session.commit()
+    flash('your answer has been successfully edited', 'success')
+    return redirect(url_for('users.all_answer'))
+
+
+@views_blueprint.route('/delete/question/<int:id>')
+def deletequestion(id):
+    if not 'username' in session:
+        return redirect(url_for('users.login'))
+    quiz= Questions.query.get_or_404(id)
+    user = User.query.filter_by(name=session['username']).first()
+    if quiz.author != user.email:
+        return """<center>
+        <h1>404 ERROR</h1>
+        <br/>
+        <h2 class="display-4">you cannot delete this post
+         which does not belong to you </h2></center>""", 404
+    db.session.delete(quiz)
+    db.session.commit()
+    flash('your question has been successfully deleted', 'success')
+    return redirect(url_for('users.account'))
+
+
+@views_blueprint.route('/delete/answer/<int:id>')
+def deleteanswer(id):
+    if not 'username' in session:
+        return redirect(url_for('users.login'))
+    answer = Answers.query.get_or_404(id)
+    user = User.query.filter_by(name=session['username']).first()
+    if answer.author != user.email:
+        return """<center>
+        <h1>404 ERROR</h1>
+        <br/>
+        <h2 class="display-4">you cannot delete this post
+         which does not belong to you </h2></center>""", 404
+    db.session.delete(answer)
+    db.session.commit()
+    flash('your answer has been successfully deleted', 'success')
+    return redirect(url_for('users.account'))
+
+
+@views_blueprint.route('/all/question')
+def all_questions():
+    if not 'username' in session:
+        return redirect(url_for('users.login'))
+    user = User.query.filter_by(name=session['username']).first()
+    quiz = Questions.query.filter_by(author=user.email).all()
+    return render_template('allquestions.html', user=user, quiz=quiz)
+
+
+@views_blueprint.route('/all/answer')
+def all_answer():
+    if not 'username' in session:
+        return redirect(url_for('users.login'))
+    user = User.query.filter_by(name=session['username']).first()
+    answer = Answers.query.filter_by(author=user.email).all()
+    return render_template('allanswers.html', user=user, answer=answer)

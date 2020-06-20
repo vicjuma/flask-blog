@@ -5,17 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/default.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
     <script src="https://cdn.ckeditor.com/4.14.0/full-all/ckeditor.js"></script>
-    <title>my posts</title>
-
+    {% if  title%}
+        <title>flask blog | {{title}}</title>
+    {% else %}
+    <title>flask blog</title>
+    {% endif %}
 </head>
-<style>
-    * {
-        font-family: san-seriff;
-        font-size: 16px;
-    }
-</style>
 
 <body>
     <div class="container-fluid position-fixed" style="z-index: 5;">
@@ -55,10 +53,12 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{url_for('users.account')}}">account</a>
                     </li>
+                    <li class="nav-item "><a style="cursor: pointer;" data-toggle="modal" data-target='#invite' class="nav-link">invite</a></li>
+                    <li class="nav-item"><a style="cursor: pointer;" class="btn btn-outline-secondary nav-link" data-toggle="modal" data-target='#question'>ask question</a></li>
                 </ul>
                 <form class="form-inline my-2 my-lg-0" method="POST" action="{{url_for('users.search')}}">
                     <input class="form-control mr-sm-2" type="search" required placeholder="enter post author's name" aria-label="Search" name="name" autocomplete="off">
-                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search Author</button>
+                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search posts</button>
                 </form>
             </div>
         </nav>
@@ -75,35 +75,82 @@
             </ul>
         </nav>
     </div>
-    <div class="container-fluid mb-5 position-absolute" style="top: 9em">
-        <div class="row">
-            <div class="col-lg-3">
-            </div>
-            <div class="col-lg-6 col-md-12">
-                {% with messages=get_flashed_messages(with_categories=true)%} {% if messages %} {%for category, message in messages%} {% if category %}
-                <div class="alert alert-{{category}} alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button> {{ message }}
-                </div>{%endif%} {%endfor%} {%endif%} {%endwith%} {%for posts in post.items%}
-                <h4 class="text text-capitalize font-weight-bolder">{{posts.title}}</h4>
-                <p>{{posts.post}}</p>
-                <a href="{{url_for('users.edit', id=posts.id)}}" class="btn btn-primary"><span class="fa fa-pencil"></span> edit your post</a>
-                <span><a href="{{url_for('users.delete', id=posts.id)}}" class="btn btn-danger"><span class="fa fa-trash"></span> delete your post</a>
-                </span>
-                <hr> {%endfor%} {%if post.has_prev%}
-                <a href="{{url_for( 'users.all_posts', page=post.prev_num)}} " class="btn btn-outline-secondary btn-sm" style="border-radius: 50px; position: absolute; left: 0%;">&lt;&lt;</a> {%else%}
-                <a href="{{url_for( 'users.all_posts', page=post.prev_num)}} " class="btn btn-outline-secondary btn-sm disabled" style="border-radius: 50px; position: absolute; left: 0%;">&lt;&lt;</a> {%endif%} {%if post.has_next%}
-                <a href="{{url_for( 'users.all_posts', page=post.next_num)}} " class="btn btn-outline-secondary btn-sm " style="border-radius: 50px; position: absolute; left: 90%;">&gt;&gt;</a> {%else%}
-                <a href="{{url_for( 'users.all_posts', page=post.next_num)}} " class="btn btn-outline-secondary btn-sm disabled " style="border-radius: 50px; position: absolute; left: 90%;">&gt;&gt;</a> {%endif%}
+    {% block body%} {% endblock body%}
+    <div class="modal fade" id="question" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="title">prompt others to answer your question</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="jumbotron">
+                        <ul>
+                            <li style="list-style: circle;">
+                                <h6 class="text text-danger">ensure that the correct syntax is used to ensure proper understanding of the person answering the question</h6>
+                            </li>
+                            <li style="list-style: circle;">
+                                <h6 class=" text text-danger ">begin your question with how when why where which explain clauses when asking your questions</h6>
+                            </li>
+                            <li style="list-style: circle;">
+                                <h6 class="text text-danger">ensure that your question ends with a question mark e.g How do you ask question in smartmindblog?</h6>
+                            </li>
+                        </ul>
+                    </div>
+                    <form action="{{url_for('users.ask')}}" method="post">
+                        <div class="form-group">
+                            <label for="question">enter your question</label>
+                            <textarea name="question" class="form-control form-control-sm" id="editor"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">select the category of your post</label>
+                            <select name="category" id="category" class="custom-select custom-select-sm" required>
+                            <option value="technology">technology</option>
+                            <option value="programming">programming</option>
+                            <option value="mathematics">mathematics</option>
+                            <option value="sports">sports</option>
+                            <option value="education">education</option>
+                            <option value="entertainment">entertainment</option>
+                            <option value="politics">politics</option>
+                            <option value="economy">economy</option>
+                        </select>
+                        </div>
+                        <input type="submit" value="ask question" class="btn btn-success">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-lg-3">
-
-    </div>
-    </div>
+    <!-- invite modal -->
+    <div class="modal fade" id="invite" tabindex="0" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">invite others to join the chat</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times</span></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{url_for('users.invite')}}" method="post">
+                        <div class="form-group">
+                            <label for="question">enter your friends email</label>
+                            <input name="email" id="email" class="form-control form-control-sm" type="email" autocomplete="off">
+                        </div>
+                        <input type="submit" value="send invitation link" class="btn btn-danger">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
-<script src="{{url_for('static', filename='js/jquery-3.4.1.min.js')}}"></script>
-<script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
-
+<script>
+    CKEDITOR.replace('editor');
+</script>
+<script src="{{url_for('static', filename='js/jquery-3.4.1.min.js' )}}"></script>
+<script src="{{url_for('static', filename='js/bootstrap.min.js' )}} "></script>
 </html>

@@ -1,0 +1,26 @@
+{% extends 'public/exeach.html' %}
+
+{% block body %}
+    <div class="container position-absolute" style="top: 8em; left: 10%;">
+        <div class="row">
+            <div class="col-lg-1">
+            </div>
+            <div class="col-lg-10">
+                <ul class="list-unstyled mt-3" style="background-color: white;">
+                    <li class="media">
+                        <img src="https://gravatar.com/avatar/{{post.author.url}}?s=80&d=monsterid" class="mr-3 rounded-circle" alt="...">
+                        <div class="media-body">
+                            <h4 class="mt-0 mb-1 text-capitalize  font-weight-bold">{{post.title}}</h4>
+                            <small>{{post.author.name}} on {{post.date}}</small>
+                            <hr>
+                            <p class="text text-dark mr-2 text-break" v-text>{{post.post}}</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-1">
+            </div>
+        </div>
+    </div>
+
+{% endblock body %}

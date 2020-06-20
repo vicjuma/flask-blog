@@ -19,70 +19,57 @@
     };
 </script>
 <style>
-    *{
-    font-family: san-seriff;
-    font-size: 19px;
+    * {
+        font-family: san-seriff;
+        font-size: 16px;
+        margin: 0px;
+        padding: 0px;
+        box-sizing: border-box;
     }
 </style>
+
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-        <a href="#" class="text text-black-50 font-weight-bold text-decoration-none" style="font-family: monospace; font-size: 2em;">sharpMindBlog</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <div class="container-fluid position-fixed" style="z-index: 5;">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+            <a href="#" class="text text-danger font-weight-bold text-decoration-none" style="font-family: monospace; font-size: 2em;">sharpMindBlog</a>
+            <button style="outline: none; border-style:none;" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="{{url_for('users.home')}}"><span class="fa fa-home"></span> Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{url_for('users.logout')}}"><span class="fa fa-sign-out"></span> sign out</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{url_for('users.account')}}">account</a>
-                </li>
-                <li class="nav-item "><a style="cursor: pointer;" data-toggle="modal" data-target='#invite' class="nav-link">invite</a></li>
-                <li class="nav-item"><a style="cursor: pointer;" class="btn btn-outline-secondary nav-link" data-toggle="modal" data-target='#question'>ask question</a></li>
-            </ul>
-            <form class="form-inline my-2 my-lg-0" method="POST" action="{{url_for('users.search')}}">
-                <input class="form-control mr-sm-2" type="search" required placeholder="Search" aria-label="Search" name="name" autocomplete="off">
-                <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search posts</button>
-            </form>
-        </div>
-    </nav>
-    <div class="pos-f-t">
-        <div class="collapse" id="navbarToggleExternalContent">
-            <div class="bg-dark p-4">
-                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                    <a class="nav-link active" id="v-pills-technology-tab" href="{{url_for('users.technology')}}">Technology</a>
-                    <a class="nav-link" id="v-pills-sports-tab" href="{{url_for('users.sports')}}">Sports</a>
-                    <a class="nav-link" id="v-pills-education-tab" href="{{url_for('users.education')}}">Education</a>
-                    <a class="nav-link" id="v-pills-programming-tab" href="{{url_for('users.programming')}}">Programming</a>
-                    <a class="nav-link" id="v-pills-mathematics-tab" href="{{url_for('users.mathematics')}}">mathematics</a>
-                    <a class="nav-link" id="v-pills-politics-tab" href="{{url_for('users.politics')}}">politics</a>
-                    <a class="nav-link" id="v-pills-entertainment-tab" href="{{url_for('users.entertainment')}}">Entertainment</a>
-                    <a class="nav-link" id="v-pills-question-tab" href="{{url_for('users.question')}}"> respond to questions</a>
-                </div>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{url_for('users.home')}}"><span class="fa fa-home"></span> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('users.logout')}}"><span class="fa fa-sign-out"></span> sign out</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('users.account')}}">account</a>
+                    </li>
+                    <li class="nav-item"><a style="cursor: pointer;" class="btn btn-outline-secondary nav-link" data-toggle="modal" data-target='#question'>ask question</a></li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0" method="POST" action="{{url_for('users.search')}}">
+                    <input class="form-control form-control-sm mr-sm-2" type="search" required placeholder="enter post author's name" aria-label="Search" name="name" autocomplete="off">
+                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search posts</button>
+                </form>
             </div>
-        </div>
-        <nav class="navbar navbar-dark bg-dark">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
         </nav>
-        <div class="container-fluid">
+    </div>
+        <div class="container-fluid position-absolute" style="top: 4em">
             <div class="row">
-                <div class="col-lg-3">
+                <div class="col-lg-2">
                 </div>
-                <div class="col-lg-9 col-md-12 col-sm-12">
+                <div class="col-lg-8 col-md-12 col-sm-12">
                     <form method="post">
                         <div class="form-group">
                             <label for="question">{{question.question}}</label>
-                            <textarea class="form-control form-control-sm" id="editor2" name="answer"></textarea>
+                            <textarea class="form-control form-control-sm" id="editor2" name="answer" required></textarea>
                         </div>
                         <input type="submit" value="submit answer" class="btn btn-outline-primary">
                     </form>
+                </div>
+                <div class="col-lg-2">
                 </div>
             </div>
         </div>

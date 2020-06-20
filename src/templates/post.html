@@ -11,11 +11,77 @@
 
 </head>
 <style>
-    *{
-    font-family: san-seriff;
-    font-size: 16px;
+    * {
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-size: 16px;
     }
 </style>
+
+<body>
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+            <a href="# " class="text text-black-50 font-weight-bold text-decoration-none" style="font-family: monospace; font-size: 2em; ">sharpMindBlog</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent " aria-controls="navbarSupportedContent " aria-expanded="false " aria-label="Toggle navigation ">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link " href="{{url_for( 'users.home')}}"><span class="fa fa-home"></span> Home</a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link " href="{{url_for( 'users.logout')}}"><span class="fa fa-sign-out "></span> sign out</a>
+                    </li>
+                    {%if user.Admin == True%}
+                    <li>
+                        <a href="{{url_for( 'admin.dashboard')}}" class="nav-link"><span class="fa fa-cog "></span> dashboard</a>
+                    </li>
+                    {%endif%}
+                    <li class="nav-item ">
+                        <a class="nav-link " href="{{url_for( 'users.account')}} ">account</a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0 " method="POST " action="{{url_for( 'users.search')}} ">
+                    <input class="form-control mr-sm-2 " type="search " required placeholder="Search " aria-label="Search " name="name " autocomplete="off ">
+                    <button class="btn btn-outline-primary my-2 my-sm-0 " type="submit ">Search posts</button>
+                </form>
+            </div>
+        </nav>
+    </div>
+
+    <div class="container-fluid ">
+        <div class="row ">
+            <div class="col-lg-2 ">
+            </div>
+            <div class="col-lg-8 ">
+                {% for user in response%} {%if user%} {%for post in user.author%}
+                <ul class="list-unstyled mt-3 " style="background-color: white; ">
+                    <li class="media mb-lg-3 ">
+                        <img src="https://gravatar.com/avatar/{{user.url}}?s=80&d=monsterid " class="mr-3 rounded-circle" alt="... ">
+                        <div class="media-body ">
+                            <h4 class="mt-0 mb-1 text-capitalize font-weight-bold ">{{post.title}}</h4>
+                            <small>{{user.name}} on {{post.date}}</small>
+                            <hr> {{post.post}}
+                        </div>
+
+                    </li>
+                </ul>
+                {%endfor%} {%else%}
+                <h1>No posts available</h1>
+                {%endif%} {%endfor%}
+            </div>
+            <div class="col-lg-2 ">
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    CKEDITOR.replace('editor');
+</script>
+<script src="{{url_for( 'static', filename='js/jquery-3.4.1.min.js' )}} "></script>
+<script src="{{url_for( 'static', filename='js/bootstrap.min.js' )}} "></script>
 <script>
     function error() {
         var name = document.querySelector('#search').value;
@@ -25,154 +91,5 @@
         }
     };
 </script>
-
-<body>
-    <div class=container-fluid">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-            <a href="#" class="text text-black-50 font-weight-bold text-decoration-none" style="font-family: monospace; font-size: 2em;">sharpMindBlog</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="{{url_for('users.home')}}"><span class="fa fa-home"></span> Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{url_for('users.logout')}}"><span class="fa fa-sign-out"></span> sign out</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    my profile
-                  </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <img src="https://gravatar.com/avatar/{{user.url}}?s=80&d=monsterid" class="rounded-circle ml-3" alt="{{user.name}}"><span class="display-4 font-weight-bolder text-capitalize text-center">{{d}}</span>
-                            <span><a class="dropdown-item" href="#">{{user.email}}</a></span>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{{url_for('users.all_posts')}}">posts <span class="badge badge-danger mx-lg-5 ml-lg-5">{{count}}</span></a>
-                            <a class="dropdown-item" href="{{url_for('users.account')}}">create posts</a>
-                            <a class="dropdown-item" href="{{url_for('users.all_posts')}}">edit posts</a>
-                            <a class="dropdown-item" href="{{url_for('users.all_posts')}}">delete posts</a>
-                        </div>
-                    </li>
-                    {%if user.Admin == True%}
-                    <li>
-                        <a href="{{url_for('admin.dashboard')}}" class="nav-link"><span class="fa fa-cog"></span> dashboard</a>
-                    </li>
-                    {%endif%}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{url_for('users.account')}}">account</a>
-                    </li>
-                    <li class="nav-item "><a style="cursor: pointer;" data-toggle="modal" data-target='#invite' class="nav-link">invite</a></li>
-                    <li class="nav-item"><a style="cursor: pointer;" class="btn btn-outline-secondary nav-link" data-toggle="modal" data-target='#question'>ask question</a></li>
-                </ul>
-                <form class="form-inline my-2 my-lg-0" method="POST" action="{{url_for('users.search')}}">
-                    <input class="form-control mr-sm-2" type="search" required placeholder="Search" aria-label="Search" name="name" autocomplete="off">
-                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search posts</button>
-                </form>
-            </div>
-        </nav>
-        <div class="pos-f-t">
-            <div class="collapse" id="navbarToggleExternalContent">
-                <div class="bg-dark p-4">
-                    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                        <a class="nav-link active" id="v-pills-technology-tab" href="{{url_for('users.technology')}}">Technology</a>
-                        <a class="nav-link" id="v-pills-sports-tab" href="{{url_for('users.sports')}}">Sports</a>
-                        <a class="nav-link" id="v-pills-education-tab" href="{{url_for('users.education')}}">Education</a>
-                        <a class="nav-link" id="v-pills-programming-tab" href="{{url_for('users.programming')}}">Programming</a>
-                        <a class="nav-link" id="v-pills-mathematics-tab" href="{{url_for('users.mathematics')}}">mathematics</a>
-                        <a class="nav-link" id="v-pills-politics-tab" href="{{url_for('users.politics')}}">politics</a>
-                        <a class="nav-link" id="v-pills-entertainment-tab" href="{{url_for('users.entertainment')}}">Entertainment</a>
-                        <a class="nav-link" id="v-pills-question-tab" href="{{url_for('users.question')}}"> respond to questions</a>
-                    </div>
-                </div>
-            </div>
-            <nav class="navbar navbar-dark bg-dark">
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-            </nav>
-        </div>
-    </div>
-
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-3 col-md-3">
-            </div>
-            <div class="col-lg-9">
-                {% for user in response%} {%if user%} {%for post in user.author%}
-                <ul class="list-unstyled mt-3" style="background-color: white;">
-                    <li class="media mb-lg-3">
-                        <img src="https://gravatar.com/avatar/{{user.url}}?s=80&d=monsterid" class="mr-3" alt="...">
-                        <div class="media-body">
-                            <h4 class="mt-0 mb-1 text-uppercase font-weight-bold">{{post.title}}</h4>
-                            <small>{{user.name}} on {{post.date}}</small>
-                            <hr>
-                            <small>{{post.post}}</small>
-                        </div>
-
-                    </li>
-                </ul>
-                {%endfor%} {%else%}
-                <h1>No posts available</h1>
-                {%endif%} {%endfor%}
-            </div>
-        </div>
-    </div>
-    <!-- modal for prompting others to answer questions -->
-    <div class="modal fade" id="question" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="title">prompt others to answer your question</h4>
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times</span></button>
-                </div>
-                <div class="modal-body">
-                    <div class="jumbotron">
-                        <ul>
-                            <li style="list-style: circle;">
-                                <h6 class="text text-danger">ensure that the correct syntax is used to ensure proper understanding of the person answering the question</h6>
-                            </li>
-                            <li style="list-style: circle;">
-                                <h6 class=" text text-danger ">begin your question with how when why where which explain clauses when asking your questions</h6>
-                            </li>
-                            <li style="list-style: circle;">
-                                <h6 class="text text-danger">ensure that your question ends with a question mark e.g How do you ask question in smartmindblog?</h6>
-                            </li>
-                        </ul>
-                    </div>
-                    <form action="{{url_for('users.ask')}}" method="post">
-                        <div class="form-group">
-                            <label for="question">enter your question</label>
-                            <input name="question" id="editor" class="form-control form-control-sm">
-                        </div>
-                        <div class="form-group">
-                            <label for="category">select the category of your post</label>
-                            <select name="category" id="category" class="custom-select custom-select-sm" required>
-                                <option value="technology">technology</option>
-                                <option value="programming">programming</option>
-                                <option value="mathematics">mathematics</option>
-                                <option value="sports">sports</option>
-                                <option value="education">education</option>
-                                <option value="entertainment">entertainment</option>
-                                <option value="politics">politics</option>
-                            </select>
-                        </div>
-                        <input type="submit" value="ask question" class="btn btn-success">
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
-<script>
-    CKEDITOR.replace('editor');
-</script>
-<script src="{{url_for('static', filename='js/jquery-3.4.1.min.js')}}"></script>
-<script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
 
 </html>

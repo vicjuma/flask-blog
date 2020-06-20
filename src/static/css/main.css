@@ -1,0 +1,14 @@
+* {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 16px;
+}
+
+#button-nav {
+    border-style: none !important;
+    outline: none !important;
+}
+
+#nav2 {
+    background-color: midnightblue;
+    height: 30vh;
+}
