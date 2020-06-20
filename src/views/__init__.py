@@ -66,7 +66,7 @@ def register():
     name = request.form.get('name')
     email = request.form.get('email')
     url = hashlib.md5(email.encode('utf-8')).hexdigest()
-    hobby = request.form.get('hobkby')
+    hobby = request.form.get('hobby')
     occupation = request.form.get('occupation')
     location = request.form.get('location')
     password = request.form.get('password')
